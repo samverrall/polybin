@@ -1,0 +1,13 @@
+[
+	{
+		"project": "testproject",
+		"services": [
+			{
+				"type": "watch",
+				"dir": "/testdir",
+				"binary": "./test",
+				"args": ["./test.sh"]
+			}
+		]
+	}
+]
