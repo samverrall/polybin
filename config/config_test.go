@@ -3,13 +3,10 @@ package config_test
 import (
 	"testing"
 
+	goutils "github.com/samverrall/go-utils"
 	"github.com/samverrall/polybin/config"
 	"github.com/stretchr/testify/assert"
 )
-
-func toPointer[T any](value T) *T {
-	return &value
-}
 
 func TestParse(t *testing.T) {
 	const (
@@ -31,13 +28,18 @@ func TestParse(t *testing.T) {
 						{
 							Type:   "watch",
 							Dir:    "/testdir",
-							Binary: toPointer("./test"),
+							Binary: goutils.ToPointer("./test"),
 							Args:   []string{"./test.sh"},
 						},
 					},
 				},
 			},
 			wantErr: false,
+		},
+		{
+			name:     "Non-existent File returns an error",
+			filepath: "/non-existent",
+			wantErr:  true,
 		},
 	}
 	for _, tc := range tests {
