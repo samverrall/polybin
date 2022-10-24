@@ -20,6 +20,7 @@ const (
 
 type flags struct {
 	Service string
+	Init    bool
 }
 
 // parseFlags parses the provided flags, and validates the input. If a non-nil
@@ -27,6 +28,7 @@ type flags struct {
 func parseFlags() (flags, error) {
 	var userFlags flags
 	flag.StringVar(&userFlags.Service, "service", "", "The name of the group of processes to run")
+	flag.BoolVar(&userFlags.Init, "init", false, "Set to true to initialise polybin config file")
 	flag.Parse()
 
 	if err := validateFlags(userFlags); err != nil {
@@ -62,8 +64,17 @@ func main() {
 	fmt.Printf("-> Looking for config file in %s\n", configFilePath)
 
 	if err := config.CheckConfigFile(configFilePath); err != nil {
-		fmt.Printf("-> Failed to read config file: %v", err)
-		os.Exit(1)
+		if flags.Init {
+			fmt.Printf("Initalizing config file in: %s", configFilePath)
+
+			if err := config.Init(configFilePath); err != nil {
+				fmt.Printf("-> Failed to init config file: %v", err)
+				os.Exit(1)
+			}
+		} else {
+			fmt.Printf("-> Failed to read config file: %v", err)
+			os.Exit(1)
+		}
 	}
 
 	config, err := config.Parse(configFilePath)

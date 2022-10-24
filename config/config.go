@@ -36,6 +36,13 @@ func (c Config) FindProjectByName(projectName string) *ConfigEntry {
 	return nil
 }
 
+// Init creates a new config file at the supplied filepath directory.
+// A basic example demo example JSON is used as the file contents.
+func Init(filepath string) error {
+	// os.Create()
+	return nil
+}
+
 func CheckConfigFile(filepath string) error {
 	file, err := os.ReadFile(filepath)
 	switch {
